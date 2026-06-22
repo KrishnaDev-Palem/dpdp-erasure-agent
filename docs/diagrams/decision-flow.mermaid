@@ -1,0 +1,48 @@
+flowchart TD
+    Start(["Data-subject request received<br/>(90-day response clock starts — Rule 14)"]) --> Gate1{"Identity<br/>verifiable?"}
+    Gate1 -->|No| Esc1[/"ESCALATE to human:<br/>identity unverifiable"/]
+    Gate1 -->|Yes| Gate2{"Well-formed and<br/>unambiguous?"}
+    Gate2 -->|No| Esc2[/"ESCALATE:<br/>malformed or ambiguous"/]
+    Gate2 -->|Yes| Gate3{"Injected or malicious<br/>instruction in request fields?"}
+    Gate3 -->|Yes| Ref[/"REFUSE and FLAG:<br/>adversarial input"/]
+    Gate3 -->|No| Type{"Request<br/>type"}
+
+    Type -->|Access| AccMap["Map all data locations<br/>for the subject"]
+    AccMap --> AccRep["Compile access summary:<br/>data held, purposes, processors"]
+    AccRep --> Cert["DELETION / ACCESS CERTIFICATE<br/>erased · retained + reason · escalated"]
+
+    Type -->|Erasure| Map["DATA MAPPING<br/>locate every location across systems<br/>(Postgres + blob store + jurisdiction)"]
+    Map --> Loop{{"for EACH data location"}}
+    Loop --> Floor{"Legal retention floor<br/>still active?<br/>KYC/PMLA 5y · GST 6y · Cos Act 8y"}
+    Floor -->|Yes| Retain[/"RETAIN-WITH-REASON<br/>refuse delete · cite statute"/]
+    Floor -->|No| Trig{"Erasure trigger met?<br/>consent withdrawn · purpose fulfilled<br/>· erasure right · 3y inactivity"}
+    Trig -->|Unclear| Esc3[/"ESCALATE:<br/>ambiguous retention status"/]
+    Trig -->|No| Keep[/"RETAIN<br/>purpose still active"/]
+    Trig -->|Yes| Mark["Mark location for erasure"]
+
+    Mark --> Notice["48-HOUR PRE-DELETION NOTICE<br/>to data principal — Rule 8"]
+    Notice --> ReEng{"Principal re-engages<br/>or objects in window?"}
+    ReEng -->|Yes| Halt[/"HALT erasure, retain"/]
+    ReEng -->|No| Exec["EXECUTE erasure on store<br/>+ propagate to processors — Rule 14"]
+
+    Exec --> Cert
+    Retain --> Cert
+    Keep --> Cert
+    Halt --> Cert
+    Esc3 --> Cert
+    Cert --> Log(["Structured audit log<br/>1-year retention — Seventh Schedule"])
+    Esc1 --> Log
+    Esc2 --> Log
+    Ref --> Log
+
+    classDef erase fill:#14532d,stroke:#052e16,color:#ffffff
+    classDef retain fill:#1e3a8a,stroke:#0f1f4d,color:#ffffff
+    classDef escalate fill:#7f1d1d,stroke:#450a0a,color:#ffffff
+    classDef gate fill:#334155,stroke:#1e293b,color:#ffffff
+    classDef io fill:#475569,stroke:#293548,color:#ffffff
+
+    class Exec,Mark erase
+    class Retain,Keep,Halt retain
+    class Esc1,Esc2,Esc3,Ref escalate
+    class Gate1,Gate2,Gate3,Type,Floor,Trig,ReEng,Loop gate
+    class Start,Map,AccMap,AccRep,Notice,Cert,Log io
