@@ -1,0 +1,48 @@
+floors:
+  - floor_id: pmla_kyc
+    regime: PMLA / RBI KYC
+    period: 5 years
+    anchor_event: transaction date, or relationship end
+    statute_citation: PMLA 2002 s.12; PMLR 2005 r.6
+    effective_date: 2005-07-01
+    variance_note: >-
+      Two clocks — transaction records from txn date, KYC/relationship records
+      from relationship end. Harmonised from ten to five years under s.12 amendment.
+
+  - floor_id: gst
+    regime: GST
+    period: 6 years
+    anchor_event: annual-return due date
+    statute_citation: CGST Act 2017 s.36
+    effective_date: 2017-07-01
+    variance_note: >-
+      Seventy-two months from the GSTR-9 due date (~31 December of the year
+      following FY-end). Post-proceedings extension not simulated.
+
+  - floor_id: income_tax
+    regime: Income Tax
+    period: 7 tax years
+    anchor_event: end of tax year
+    statute_citation: Income-tax Rules 2026 r.46
+    effective_date: 2026-04-01
+    variance_note: >-
+      Post-1-April-2026 seven-year regime. Predecessor six-year rule not branched.
+
+  - floor_id: companies_act
+    regime: Companies Act
+    period: 8 financial years
+    anchor_event: end of financial year
+    statute_citation: Companies Act 2013 s.128(5)
+    effective_date: 2013-08-30
+    variance_note: >-
+      Eight financial years immediately preceding the current one.
+      Investigation-triggered extension not simulated.
+
+  - floor_id: sebi
+    regime: SEBI
+    period: 8 years
+    anchor_event: transaction or communication date
+    statute_citation: SEBI (LODR) Regs 2015 reg.9
+    effective_date: 2015-09-02
+    variance_note: >-
+      LODR Schedule B eight-year floor. 2024 consultation toward reg.27A not branched.

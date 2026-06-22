@@ -1,0 +1,11 @@
+# Byte-compiled / virtual environments
+.venv/
+__pycache__/
+*.py[cod]
+
+# Test artifacts
+.pytest_cache/
+.ruff_cache/
+
+# Local blob copies written by seed (canonical paths under fixtures/blobs)
+fixtures/blobs/*.pdf

@@ -1,0 +1,422 @@
+as_of: 2026-06-01
+
+subjects:
+  - subject_id: subj-payment-inside-floors
+    coverage_tags: [floor_inside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-001
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2020-03-01
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-001
+        entity: transactions
+        txn_date: 2023-09-15
+        amount: 12500
+        instrument_type: upi
+        is_processor_held: true
+    expected:
+      - location_id: cust-001
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-001
+        category: payment_transaction
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc, gst, income_tax, companies_act]
+
+  - subject_id: subj-payment-outside-floors
+    coverage_tags: [floor_outside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-002
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2015-01-10
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-002
+        entity: transactions
+        txn_date: 2017-09-15
+        amount: 8200
+        instrument_type: card
+        is_processor_held: false
+    expected:
+      - location_id: cust-002
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-002
+        category: payment_transaction
+        anchor_resolvable: true
+        verdict: erase
+        cited_floors: []
+
+  - subject_id: subj-cross-floor
+    coverage_tags: [cross_floor]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-003
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2016-05-20
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-003
+        entity: transactions
+        txn_date: 2019-09-15
+        amount: 45000
+        instrument_type: netbanking
+        is_processor_held: false
+    expected:
+      - location_id: cust-003
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-003
+        category: payment_transaction
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [gst, income_tax, companies_act]
+
+  - subject_id: subj-mixed-fanout
+    coverage_tags: [mixed_fanout]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-004
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2018-02-14
+        account_status: closed
+        account_closure_date: null
+      - location_id: mkt-004
+        entity: marketing_consents
+        consent_status: withdrawn
+        consent_granted_date: 2021-06-01
+        consent_withdrawn_date: 2025-11-01
+        purpose: product_updates
+      - location_id: txn-004
+        entity: transactions
+        txn_date: 2023-09-15
+        amount: 150000
+        instrument_type: equity
+        is_processor_held: false
+    expected:
+      - location_id: cust-004
+        category: customer
+        anchor_resolvable: false
+        verdict: escalate
+        cited_floors: []
+      - location_id: mkt-004
+        category: marketing_consent
+        anchor_resolvable: true
+        verdict: erase
+        cited_floors: []
+      - location_id: txn-004
+        category: securities_transaction
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc, income_tax, companies_act, sebi]
+
+  - subject_id: subj-under-determined
+    coverage_tags: [under_determined]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-005
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2019-08-01
+        account_status: closed
+        account_closure_date: null
+    expected:
+      - location_id: cust-005
+        category: customer
+        anchor_resolvable: false
+        verdict: escalate
+        cited_floors: []
+
+  - subject_id: subj-dormant
+    coverage_tags: [dormant]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-006
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2014-03-15
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-006
+        entity: transactions
+        txn_date: 2017-09-15
+        amount: 3000
+        instrument_type: neft
+        is_processor_held: false
+    expected:
+      - location_id: cust-006
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-006
+        category: payment_transaction
+        anchor_resolvable: true
+        verdict: erase
+        cited_floors: []
+
+  - subject_id: subj-securities-inside-floors
+    coverage_tags: [floor_inside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-007
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2021-01-01
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-007
+        entity: transactions
+        txn_date: 2024-01-20
+        amount: 250000
+        instrument_type: mutual_fund
+        is_processor_held: false
+    expected:
+      - location_id: cust-007
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-007
+        category: securities_transaction
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc, income_tax, companies_act, sebi]
+
+  - subject_id: subj-securities-outside-floors
+    coverage_tags: [floor_outside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-008
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2012-06-01
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-008
+        entity: transactions
+        txn_date: 2017-09-15
+        amount: 99000
+        instrument_type: bond
+        is_processor_held: false
+    expected:
+      - location_id: cust-008
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-008
+        category: securities_transaction
+        anchor_resolvable: true
+        verdict: erase
+        cited_floors: []
+
+  - subject_id: subj-kyc-open-relationship
+    coverage_tags: [floor_inside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-009
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2022-04-10
+        account_status: open
+        account_closure_date: null
+      - location_id: kyc-009
+        entity: kyc_documents
+        customer_location_id: cust-009
+        doc_type: pan_card
+        file_path: fixtures/blobs/cust-009-pan.pdf
+        uploaded_date: 2022-04-12
+    expected:
+      - location_id: cust-009
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: kyc-009
+        category: kyc_document
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+
+  - subject_id: subj-kyc-closed-inside-floor
+    coverage_tags: [floor_inside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-010
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2018-01-01
+        account_status: closed
+        account_closure_date: 2024-01-15
+      - location_id: kyc-010
+        entity: kyc_documents
+        customer_location_id: cust-010
+        doc_type: aadhaar
+        file_path: fixtures/blobs/cust-010-aadhaar.pdf
+        uploaded_date: 2018-01-05
+    expected:
+      - location_id: cust-010
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: kyc-010
+        category: kyc_document
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+
+  - subject_id: subj-marketing-active
+    coverage_tags: [floor_outside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-011
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2023-05-01
+        account_status: open
+        account_closure_date: null
+      - location_id: mkt-011
+        entity: marketing_consents
+        consent_status: active
+        consent_granted_date: 2023-05-01
+        consent_withdrawn_date: null
+        purpose: newsletters
+    expected:
+      - location_id: cust-011
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: mkt-011
+        category: marketing_consent
+        anchor_resolvable: true
+        verdict: erase
+        cited_floors: []
+
+  - subject_id: subj-wallet-instrument
+    coverage_tags: [floor_inside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-012
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2021-07-01
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-012
+        entity: transactions
+        txn_date: 2024-11-01
+        amount: 500
+        instrument_type: wallet
+        is_processor_held: true
+    expected:
+      - location_id: cust-012
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-012
+        category: payment_transaction
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc, gst, income_tax, companies_act]
+
+  - subject_id: subj-etf-instrument
+    coverage_tags: [floor_inside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-013
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2020-09-01
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-013
+        entity: transactions
+        txn_date: 2024-06-15
+        amount: 75000
+        instrument_type: etf
+        is_processor_held: false
+    expected:
+      - location_id: cust-013
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-013
+        category: securities_transaction
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc, income_tax, companies_act, sebi]
+
+  - subject_id: subj-imps-instrument
+    coverage_tags: [floor_inside]
+    request:
+      type: erasure
+      basis: explicit_erasure_right
+    records:
+      - location_id: cust-014
+        entity: customers
+        jurisdiction: IN
+        relationship_start: 2019-11-11
+        account_status: open
+        account_closure_date: null
+      - location_id: txn-014
+        entity: transactions
+        txn_date: 2025-01-10
+        amount: 22000
+        instrument_type: imps
+        is_processor_held: false
+    expected:
+      - location_id: cust-014
+        category: customer
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc]
+      - location_id: txn-014
+        category: payment_transaction
+        anchor_resolvable: true
+        verdict: retain
+        cited_floors: [pmla_kyc, gst, income_tax, companies_act]
