@@ -27,6 +27,8 @@ REQUIRED_COVERAGE_TAGS = frozenset(
         "mixed_fanout",
         "under_determined",
         "dormant",
+        "no_trigger_retain",
+        "inactivity_only",
     }
 )
 
@@ -258,6 +260,12 @@ class TestFixtureInvariants:
 
         with psycopg.connect(database_url) as conn:
             records = _fetch_all_records(conn)
+
+        fixture_location_ids = {
+            r["location_id"] for subject in seeded["subjects"] for r in subject["records"]
+        }
+        db_location_ids = {r["location_id"] for r in records}
+        assert fixture_location_ids == db_location_ids
 
         for record in records:
             subject = subjects[record["subject_id"]]
