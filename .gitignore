@@ -1,3 +1,6 @@
+# Environment
+.env
+
 # Byte-compiled / virtual environments
 .venv/
 __pycache__/
