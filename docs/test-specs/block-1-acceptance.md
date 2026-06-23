@@ -118,6 +118,8 @@ The seed must carry at least one subject for each tag:
 - `mixed_fanout` — one subject whose locations span all three lanes in a single request: a withdrawn marketing consent (erase), a securities transaction inside its floor (retain), and a closed account with a null closure date (escalate).
 - `under_determined` — a closed account with a null closure date → escalate. The canonical uncomputable-anchor case.
 - `dormant` — a subject whose floors have all elapsed and whose latest `txn_date` is older than three years before `as_of` → the inactivity trigger fires → erase. Last engagement is proxied by latest `txn_date`; logins are not modeled.
+- `no_trigger_retain` — a payment transaction whose floors have all elapsed, under a non-triggering request basis (consent_withdrawn) on a non-dormant subject → retain with empty cited_floors. Exercises the "cleared floor, no valid trigger → retain" branch.
+- `inactivity_only` — a dormant subject under a non-triggering basis (inactivity) whose floor-cleared transaction erases on the inactivity trigger alone, with no co-firing request-level trigger → distinguishes inactivity-in-isolation from the over-determined dormant subject.
 
 ## Eval consumability
 
