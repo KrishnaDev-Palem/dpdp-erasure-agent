@@ -8,3 +8,4 @@ Each ADR records one significant design decision — its context, the decision i
 | [0002](0002-synthetic-dataset-shape.md) | Synthetic Dataset Shape | Accepted |
 | [0003](0003-toolchain-and-runtime-baseline.md) | Toolchain and Runtime Baseline | Accepted |
 | [0004](0004-agent-orchestration.md) | Agent Orchestration | Accepted |
+| [0005](0005-execution-certificate-audit-log.md) | Execution, Certificate, and Audit Log | Accepted |
