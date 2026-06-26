@@ -46,6 +46,7 @@ TABLES = ("customers", "transactions", "marketing_consents", "kyc_documents")
 REQUIRED_COVERAGE = frozenset(
     {
         "execute_erase",
+        "execute_erase_kyc_blob",
         "execute_retain_untouched",
         "execute_escalate_skipped",
         "mixed_certificate",
@@ -56,6 +57,9 @@ REQUIRED_COVERAGE = frozenset(
         "request_refused_logged",
     }
 )
+
+KYC_STUB_HEADER = "SYNTHETIC TEST ARTIFACT — NOT REAL PII\n"
+BLOCK4_SEED_SUBJECTS = ("propagation_subject", "kyc_blob_subject")
 
 
 @pytest.fixture(scope="session")
@@ -125,25 +129,47 @@ def _raw_request(payload: dict[str, Any]) -> RawRequest:
     )
 
 
-def _insert_propagation_subject(conn: psycopg.Connection, block4_fixtures: dict) -> None:
-    subject = block4_fixtures["propagation_subject"]
-    subject_id = subject["subject_id"]
+def _prewrite_kyc_stub(blobs_dir: Path, filename: str) -> None:
+    blobs_dir.mkdir(parents=True, exist_ok=True)
+    (blobs_dir / filename).write_text(KYC_STUB_HEADER, encoding="utf-8")
+
+
+def _insert_block4_subjects(
+    conn: psycopg.Connection,
+    block4_fixtures: dict,
+    *,
+    blobs_scratch_dir: Path | None = None,
+) -> None:
     with conn.cursor() as cur:
-        for record in subject["records"]:
-            entity = record["entity"]
-            if entity == "customers":
-                _insert_customer(cur, subject_id, record)
-            elif entity == "transactions":
-                _insert_transaction(cur, subject_id, record)
-            elif entity == "marketing_consents":
-                _insert_marketing_consent(cur, subject_id, record)
-            elif entity == "kyc_documents":
-                _insert_kyc_document(cur, subject_id, record, BLOBS_DIR)
-            else:
-                raise ValueError(f"unknown entity: {entity}")
+        for key in BLOCK4_SEED_SUBJECTS:
+            subject = block4_fixtures[key]
+            subject_id = subject["subject_id"]
+            kyc_blobs_dir = (
+                blobs_scratch_dir
+                if key == "kyc_blob_subject" and blobs_scratch_dir is not None
+                else BLOBS_DIR
+            )
+            for record in subject["records"]:
+                entity = record["entity"]
+                if entity == "customers":
+                    _insert_customer(cur, subject_id, record)
+                elif entity == "transactions":
+                    _insert_transaction(cur, subject_id, record)
+                elif entity == "marketing_consents":
+                    _insert_marketing_consent(cur, subject_id, record)
+                elif entity == "kyc_documents":
+                    _prewrite_kyc_stub(kyc_blobs_dir, Path(record["file_path"]).name)
+                    _insert_kyc_document(cur, subject_id, record, kyc_blobs_dir)
+                else:
+                    raise ValueError(f"unknown entity: {entity}")
 
 
-def reseed_store(database_url: str, block4_fixtures: dict) -> dict[str, Any]:
+def reseed_store(
+    database_url: str,
+    block4_fixtures: dict,
+    *,
+    blobs_scratch_dir: Path | None = None,
+) -> dict[str, Any]:
     block1 = load_fixtures()
     with psycopg.connect(database_url) as conn:
         apply_schema(conn)
@@ -160,7 +186,7 @@ def reseed_store(database_url: str, block4_fixtures: dict) -> dict[str, Any]:
                         _insert_marketing_consent(cur, sid, record)
                     elif entity == "kyc_documents":
                         _insert_kyc_document(cur, sid, record, BLOBS_DIR)
-        _insert_propagation_subject(conn, block4_fixtures)
+        _insert_block4_subjects(conn, block4_fixtures, blobs_scratch_dir=blobs_scratch_dir)
         apply_audit_schema(conn)
         conn.commit()
     return block1
@@ -194,8 +220,11 @@ def _run_pipeline(
     classifier: StubClassifier | None = None,
     verification_map: dict[str, str] | None = None,
     pre_commit_fault=None,
+    blobs_scratch_dir: Path | None = None,
 ):
-    block1 = reseed_store(database_url, block4_fixtures)
+    block1 = reseed_store(
+        database_url, block4_fixtures, blobs_scratch_dir=blobs_scratch_dir
+    )
     floors, governance = rules
     as_of = _as_date(block1["as_of"])
     classifier = classifier or StubClassifier(verdict="clean")
@@ -292,21 +321,44 @@ def _assert_certificate_correct(
     }
 
 
+def _erased_kyc_blob_paths(manifest, exec_result) -> dict[str, Path]:
+    if exec_result is None:
+        return {}
+    erased_ids = [
+        e.location_id
+        for e in manifest.entries
+        if e.entity == "kyc_documents" and e.verdict == "erase"
+    ]
+    return dict(zip(erased_ids, exec_result.blob_paths, strict=True))
+
+
 def _assert_execution_fidelity(
     conn_url: str,
     cert,
     manifest,
+    exec_result=None,
 ) -> None:
+    erased_kyc_blobs = _erased_kyc_blob_paths(manifest, exec_result)
     with psycopg.connect(conn_url) as conn:
         for ment, cent in zip(manifest.entries, cert.entries, strict=True):
             exists = location_exists(conn, ment.entity, ment.location_id)
             if cent.outcome == "erased":
                 assert not exists
-                if ment.entity == "kyc_documents":
-                    # Blob unlinked after commit — row gone; path from manifest entity.
-                    pass
             else:
                 assert exists
+            if ment.entity == "kyc_documents":
+                if ment.verdict == "erase":
+                    blob_path = erased_kyc_blobs[ment.location_id]
+                    assert not blob_path.exists()
+                elif ment.verdict == "retain":
+                    with conn.cursor() as cur:
+                        cur.execute(
+                            "SELECT file_path FROM kyc_documents WHERE location_id = %s",
+                            (ment.location_id,),
+                        )
+                        row = cur.fetchone()
+                    assert row is not None
+                    assert Path(row[0]).exists()
             if ment.verdict != "erase":
                 assert cent.outcome != "erased"
 
@@ -350,6 +402,64 @@ class TestExecuteErase:
         with psycopg.connect(database_url) as conn:
             assert not location_exists(conn, "transactions", "txn-017")
             assert location_exists(conn, "customers", "cust-016")
+
+
+class TestExecuteEraseKycBlob:
+    def test_execute_erase_kyc_blob(
+        self,
+        database_url: str,
+        block4_fixtures,
+        rules,
+    ):
+        subject = block4_fixtures["kyc_blob_subject"]
+        request = _request_for(subject, block4_fixtures["verification"])
+        overlays = _overlays(block4_fixtures)
+        floors, governance = rules
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            blobs_scratch = tmp_path / "blobs"
+            block1 = reseed_store(
+                database_url, block4_fixtures, blobs_scratch_dir=blobs_scratch
+            )
+            as_of = _as_date(block1["as_of"])
+            with psycopg.connect(database_url) as conn:
+                manifest = plan(
+                    ErasureRequest(
+                        subject_id=subject["subject_id"],
+                        type=subject["request"]["type"],
+                        basis=subject["request"]["basis"],
+                    ),
+                    conn,
+                    as_of,
+                    governance,
+                    floors,
+                )
+
+            outcome, exec_result, audit, _, _, _ = _run_pipeline(
+                database_url,
+                block4_fixtures,
+                rules,
+                request,
+                overlays,
+                tmp_path,
+                blobs_scratch_dir=blobs_scratch,
+            )
+
+        assert isinstance(outcome, CompletedOutcome)
+        assert exec_result is not None
+        assert len(audit) == 1
+
+        erased_kyc = next(e for e in outcome.certificate.entries if e.location_id == "kyc-019")
+        assert erased_kyc.outcome == "erased"
+        erased_cust = next(e for e in outcome.certificate.entries if e.location_id == "cust-019")
+        assert erased_cust.outcome == "erased"
+
+        kyc_entry = next(e for e in manifest.entries if e.location_id == "kyc-019")
+        assert kyc_entry.verdict == "erase"
+        _assert_execution_fidelity(
+            database_url, outcome.certificate, manifest, exec_result
+        )
 
 
 class TestExecuteRetainUntouched:
@@ -776,12 +886,15 @@ class TestVerdictFidelity:
             "subj-under-determined",
             "subj-mixed-fanout",
             "subj-processor-propagation",
+            "subj-kyc-blob-erase",
         ]
         floors, governance = rules
 
         for sid in executing_subjects:
             if sid == "subj-processor-propagation":
                 subject = block4_fixtures["propagation_subject"]
+            elif sid == "subj-kyc-blob-erase":
+                subject = block4_fixtures["kyc_blob_subject"]
             else:
                 subject = _subject_by_id(block1_fixtures, sid)
             request = _request_for(subject, block4_fixtures["verification"])

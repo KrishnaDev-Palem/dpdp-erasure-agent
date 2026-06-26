@@ -1,4 +1,4 @@
-# Block-4 overlays and the processor-propagation seed subject.
+# Block-4 overlays and seed-forward subjects.
 # All other subjects come from fixtures/block1.yaml unchanged.
 
 verification:
@@ -7,6 +7,7 @@ verification:
   subj-under-determined: tok-dddd4444
   subj-mixed-fanout: tok-bbbb2222
   subj-processor-propagation: tok-eeee5555
+  subj-kyc-blob-erase: tok-ffff6666
 
 re_engagement:
   # Applied only in the notice_halt coverage case.
@@ -46,3 +47,24 @@ propagation_subject:
       anchor_resolvable: true
       verdict: erase
       cited_floors: []
+
+kyc_blob_subject:
+  subject_id: subj-kyc-blob-erase
+  coverage_tags: [kyc_blob_erase]
+  request:
+    type: erasure
+    basis: explicit_erasure_right
+  records:
+    - location_id: cust-019
+      entity: customers
+      jurisdiction: IN
+      data_residency: IN
+      relationship_start: 2015-01-01
+      account_status: closed
+      account_closure_date: 2019-03-10
+    - location_id: kyc-019
+      entity: kyc_documents
+      customer_location_id: cust-019
+      doc_type: pan_card
+      file_path: kyc-019-stub.pdf
+      uploaded_date: 2015-01-05

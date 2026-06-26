@@ -48,6 +48,8 @@ The executor walks the manifest entries and acts per verdict. It changes no verd
    - **Halt check.** If the entry's subject is flagged re-engaged in the re-engagement map, the location halts: it is not deleted, it rolls onto the certificate as halted with a re-engagement reason, and it produces no processor action. The manifest verdict was erase; execution was stopped.
    - **Delete.** Otherwise the row is deleted, and for a `kyc_documents` location its blob file is unlinked. If the location is `is_processor_held`, a processor action is recorded `issued`, then `acknowledged` if the acknowledgement map marks it so, else left `issued` (erasure-pending). The location rolls onto the certificate as erased, annotated with its processor status where applicable.
 
+Deletions within a request are ordered FK-children before parents (`kyc_documents`, `marketing_consents`, `transactions`, then `customers` last) so a multi-entity erase satisfies referential integrity inside the single transaction. Certificate entry order follows the manifest unchanged.
+
 The row deletions for a request and the request's audit entry commit in a single transaction. Blob unlinks run after the commit, with the audit entry as the source of truth, per ADR-0005.
 
 A `proceeded` outcome narrows to `completed`, carrying the certificate. An `escalated` or `refused` outcome performs no execution — there is no manifest — and is logged directly with no certificate.
@@ -131,6 +133,7 @@ The table is append-only by policy and its one-year retention is a stated proper
 Each reuses a block-1 subject, with block-4 overlays where the case needs one:
 
 - `execute_erase` — a subject with an erasable location that is deleted; the store reflects the deletion and the audit entry is present.
+- `execute_erase_kyc_blob` — a seeded `kyc_documents` location (closed relationship, `pmla_kyc` elapsed, erasure right) planned through the frozen pipeline so the executor's post-commit blob-unlink is exercised; the stub blob is materialized to a scratch path at reseed and asserted absent after execution. Seeded forward in `block4.yaml`, mirroring the `propagation_subject` resolution, rather than flagging a frozen block-1 record.
 - `execute_retain_untouched` — a subject with a floor-retained location that remains in the store after execution.
 - `execute_escalate_skipped` — the `under_determined` subject: the escalate location rolls onto the certificate and the row remains, never entering the delete path.
 - `mixed_certificate` — the `mixed_fanout` subject: one certificate spanning `erased`, `retained`, and `escalated` in a single request.

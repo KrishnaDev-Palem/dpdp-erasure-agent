@@ -27,6 +27,9 @@ ENTITY_TABLE = {
     "kyc_documents": "kyc_documents",
 }
 
+# FK-safe row delete order: kyc_documents references customers; children before parents.
+_FK_SAFE_DELETE_ORDER = ("kyc_documents", "marketing_consents", "transactions", "customers")
+
 PreCommitFault = Callable[[], None] | None
 
 
@@ -124,6 +127,7 @@ def execute(
     issued_at = datetime.combine(manifest.as_of, time(12, 0, 0), tzinfo=UTC)
 
     with conn.cursor() as cur:
+        erase_to_delete: list[ManifestEntry] = []
         for entry in manifest.entries:
             if entry.verdict == "erase" and re_engaged:
                 halts.append(entry.location_id)
@@ -131,15 +135,11 @@ def execute(
                 continue
 
             if entry.verdict == "erase":
-                table = ENTITY_TABLE[entry.entity]
                 if entry.entity == "kyc_documents":
                     blob = _fetch_blob_path(cur, entry.location_id)
                     if blob is not None:
                         blob_paths.append(blob)
-                cur.execute(
-                    f"DELETE FROM {table} WHERE location_id = %s",
-                    (entry.location_id,),
-                )
+                erase_to_delete.append(entry)
                 deletions.append(entry.location_id)
                 if entry.is_processor_held:
                     state = (
@@ -151,6 +151,16 @@ def execute(
                 cert_entries.append(_certificate_entry(entry, subject_id, overlays, halted=False))
             else:
                 cert_entries.append(_certificate_entry(entry, subject_id, overlays, halted=False))
+
+        for entry in sorted(
+            erase_to_delete,
+            key=lambda e: _FK_SAFE_DELETE_ORDER.index(e.entity),
+        ):
+            table = ENTITY_TABLE[entry.entity]
+            cur.execute(
+                f"DELETE FROM {table} WHERE location_id = %s",
+                (entry.location_id,),
+            )
 
         certificate = Certificate(
             subject_id=manifest.subject_id,
