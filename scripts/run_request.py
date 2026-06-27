@@ -366,8 +366,9 @@ def _scenario_specs(
             label="halt - re-engaged subject, erasure stopped in notice window",
             request=_request_for(halt_subj, verification),
             classifier=StubClassifier(verdict="clean"),
-            overlays=_overlay_from_name(
-                "re_engaged", block4, subject_id=halt_subj["subject_id"]
+            overlays=_overlays(
+                block4,
+                re_engagement=frozenset({"subj-inactivity-only"}),
             ),
         ),
     }
