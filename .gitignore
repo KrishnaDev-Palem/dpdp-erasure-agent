@@ -10,5 +10,8 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 
+# Demo certificate JSON
+outputs/
+
 # Local blob copies written by seed (canonical paths under fixtures/blobs)
 fixtures/blobs/*.pdf
