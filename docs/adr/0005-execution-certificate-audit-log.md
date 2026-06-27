@@ -44,6 +44,7 @@ The textual anchor is recorded plainly. Rule 8's 48-hour notice is tied most spe
 ## Consequences
 
 - The act and its record are atomic: no erasure occurs without a committed audit entry, and the one non-transactional seam (blob unlink) fails toward an orphaned file rather than a lost record.
+- Inside that transaction, row deletions execute in foreign-key order — children before parents (kyc_documents before customers) — so a non-cascading FK never aborts the act mid-commit. This execution order is internal to the executor and deliberately independent of manifest order and certificate entry order, which stay organized for the reader, not the database.
 - The certificate is honest about processor-held locations — completion is asserted only where acknowledged, pending otherwise — which is the obligation's accountable half made visible.
 - The demonstrator gains a fourth per-location terminal, halt, that reads cleanly against the decision flow and is distinguishable from a floor-retain by its reason.
 - Audit-log immutability is demonstrator-grade. The production guarantee — INSERT-only grants and an external write-once sink — is named as the next step, not built, and a reader can see exactly where the demonstrator stops.
