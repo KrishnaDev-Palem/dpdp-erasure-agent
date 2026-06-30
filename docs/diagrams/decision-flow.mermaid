@@ -1,3 +1,9 @@
+---
+config:
+  theme: base
+  themeVariables:
+    fontSize: 18px
+---
 flowchart TD
     Start(["Data-subject request received<br/>(90-day response clock starts — Rule 14)"]) --> Gate1{"Identity<br/>verifiable?"}
     Gate1 -->|No| Esc1[/"ESCALATE to human:<br/>identity unverifiable"/]

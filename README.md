@@ -14,7 +14,7 @@
 
 ---
 
-India's Digital Personal Data Protection (DPDP) Act gives people the right to have a company erase their
+India's [Digital Personal Data Protection (DPDP) Act][dpdp] gives people the right to have a company erase their
 personal data. Honoring that right correctly is harder than it looks. Other laws (tax, anti-money-laundering,
 securities) require certain records to be kept for years, so a company that deletes everything breaks those,
 while a company that keeps everything breaks the person's erasure right. The correct response has to be
@@ -184,6 +184,12 @@ downstream of it is deterministic. That boundary is the subject of
 The shape of one pass:
 
 ```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    fontSize: 18px
+---
 flowchart TD
     Req(["Erasure request<br/>principal · basis · as-of"]) --> G1{"Identity<br/>verified?"}
     G1 -->|no| X1[/"ESCALATE<br/>identity unverifiable"/]
@@ -244,6 +250,12 @@ per-location floor/trigger/anchor decision, the notice window, and how each path
 certificate and the audit log.
 
 ```mermaid
+---
+config:
+  theme: base
+  themeVariables:
+    fontSize: 18px
+---
 flowchart TD
     Start(["Data Principal request received<br/>(90-day response clock starts — Rule 14)"]) --> Gate1{"Identity<br/>verifiable?"}
     Gate1 -->|No| Esc1[/"ESCALATE to human:<br/>identity unverifiable"/]
@@ -384,4 +396,4 @@ independently and should be re-verified against the source statutes on any amend
 
 [MIT](LICENSE).
 
-[dpdp]: https://www.meity.gov.in/data-protection-framework
+[dpdp]: https://www.dpdpa.com/
