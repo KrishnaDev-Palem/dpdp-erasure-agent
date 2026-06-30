@@ -184,12 +184,6 @@ downstream of it is deterministic. That boundary is the subject of
 The shape of one pass:
 
 ```mermaid
----
-config:
-  theme: base
-  themeVariables:
-    fontSize: 18px
----
 flowchart TD
     Req(["Erasure request<br/>principal · basis · as-of"]) --> G1{"Identity<br/>verified?"}
     G1 -->|no| X1[/"ESCALATE<br/>identity unverifiable"/]
@@ -250,12 +244,6 @@ per-location floor/trigger/anchor decision, the notice window, and how each path
 certificate and the audit log.
 
 ```mermaid
----
-config:
-  theme: base
-  themeVariables:
-    fontSize: 18px
----
 flowchart TD
     Start(["Data Principal request received<br/>(90-day response clock starts — Rule 14)"]) --> Gate1{"Identity<br/>verifiable?"}
     Gate1 -->|No| Esc1[/"ESCALATE to human:<br/>identity unverifiable"/]
