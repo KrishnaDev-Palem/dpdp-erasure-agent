@@ -4,7 +4,7 @@
 
 **Decides, record by record, whether a person's data can be lawfully erased under India's DPDP Act, then proves it.**
 
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
 [![tests](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent/actions/workflows/tests.yml/badge.svg)](https://github.com/KrishnaDev-Palem/dpdp-erasure-agent/actions/workflows/tests.yml)
 [![database](https://img.shields.io/badge/PostgreSQL-required-blue.svg)](docs/adr/0003-toolchain-and-runtime-baseline.md)
@@ -403,6 +403,6 @@ novel technique.
 
 ## License
 
-[MIT](LICENSE).
+[MIT](LICENSE.md).
 
 [dpdp]: https://www.dpdpa.com/
