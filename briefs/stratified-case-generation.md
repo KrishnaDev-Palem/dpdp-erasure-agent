@@ -1,5 +1,6 @@
 # Stratified Case Generation
 
+**Status:** Working plan — **superseded** for durable specs by [`docs/design-space.md`](../docs/design-space.md), [`docs/export-schema.md`](../docs/export-schema.md), [ADR-0006](../docs/adr/0006-stratified-oracle-generation.md), and [ADR-0007](../docs/adr/0007-eval-split-sebi-holdout.md). Keep this file as the historical upstream plan and DoD checklist.
 **Scope:** the upstream half of Part 1. Nothing precedes it except a superseding ADR for ADR-0002 (which rejected scale generation).
 **Consumed by:** the evaluation repository immediately (revision re-run). A later training project may reuse the same generator; that reuse is out of scope here.
 
@@ -203,19 +204,19 @@ Both this repository and `dpdp-erasure-eval` are already public. The checks belo
 
 ## Definition of done
 
-- [ ] Superseding ADR for ADR-0002 merged
-- [ ] `docs/design-space.md` written and reconciled against the engine
-- [ ] `docs/export-schema.md` written; export format versioned; export tooling present in this repo
-- [ ] Generator committed with per-cell target counts in configuration
-- [ ] Seeded and reproducible to identical output
-- [ ] 5,000–10,000 oracle-labeled cases in the pool; per-cell actuals published against targets
-- [ ] Frozen eval slice of ~300–400 stratified pairs identified and hashed
-- [ ] `strata` object present on every exported case, including `split`
-- [ ] Split defined by rule shape, choice justified in an ADR
-- [ ] Export regenerated and commit tagged for downstream re-pinning
-- [ ] Manifest hash published
-- [ ] README framing applied: scope of the labels, not legal advice, synthetic data only (main body)
-- [ ] Scope-of-support statement in the README, and in an issue template
-- [ ] Secrets and PII scan run across all refs; result recorded
-- [ ] This document labelled as a working plan (or superseded by the durable docs above)
-- [ ] Optional: ruleset perturbation mode behind a flag
+- [x] Superseding ADR for ADR-0002 merged
+- [x] `docs/design-space.md` written and reconciled against the engine
+- [x] `docs/export-schema.md` written; export format versioned; export tooling present in this repo
+- [x] Generator committed with per-cell target counts in configuration
+- [x] Seeded and reproducible to identical output
+- [x] 5,000–10,000 oracle-labeled cases in the pool; per-cell actuals published against targets
+- [x] Frozen eval slice of ~300–400 stratified pairs identified and hashed
+- [x] `strata` object present on every exported case, including `split`
+- [x] Split defined by rule shape, choice justified in an ADR
+- [x] Export regenerated and commit tagged for downstream re-pinning
+- [x] Manifest hash published
+- [x] README framing applied: scope of the labels, not legal advice, synthetic data only (main body)
+- [x] Scope-of-support statement in the README, and in an issue template
+- [x] Secrets and PII scan run across all refs; result recorded
+- [x] This document labelled as a working plan (or superseded by the durable docs above)
+- [ ] Optional: ruleset perturbation mode behind a flag — **deferred** (Wave H not required for downstream re-pin)
