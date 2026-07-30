@@ -24,6 +24,22 @@ human to look at it.
 This agent does that adjudication from the company's side. It emits a signed certificate for every decision,
 along with an immutable audit trail.
 
+**This is not legal advice, and it is not a compliance system.** It is a deterministic rule engine and
+demonstrator for research and engineering. Do not treat its outputs as a substitute for counsel or for an
+organisation's own compliance programme.
+
+Cases and certificates are labelled correctly **with respect to this repository's encoding** of statutory
+retention rules. The repository takes no position on whether that encoding is the correct reading of the
+DPDP Act or of any sectoral statute. All records are **generated**; no real, derived, or re-identifiable
+personal data appears anywhere in the repository. Entity types and field names are modelled on statutory
+categories rather than copied from any production system. Statutes are **referenced, not reproduced** —
+provisions are cited by reference and the reader should check the source text.
+
+> **Scope of support.** Questions about whether a specific organisation's retention practice complies with
+> the DPDP Act or any sectoral statute are out of scope and will be closed without a substantive answer.
+> Corrections to the encoding are welcome as issues that cite the provision and identify the discrepancy.
+> Requests for a legal position are not.
+
 <div align="center">
 
 <img src="assets/demo.gif" alt="One erasure request resolving to three different lawful outcomes in a single certificate" width="850" />
@@ -49,7 +65,9 @@ evaluates each location independently and returns one of three **outcomes**:
 - **Retain-with-reason**: a law requires keeping it, so refuse to delete and cite the binding statute.
 - **Escalate**: the agent cannot safely decide, so it routes the case to a human rather than guess.
 
-Two more terms carry the rest of the README. The **certificate** is the agent's output: a structured,
+Terms used consistently across this repository and the evaluation harness include **retention floor**,
+**anchor**, **trigger**, **precedence**, **over-erasure**, **mis-escalation**, **stratum**, **context
+tier**, and **frozen slice**. The **certificate** is the agent's output: a structured,
 per-location record of what was decided and why, the artifact you could hand to an auditor or regulator.
 Alongside it is an **audit log** entry, the immutable internal record that the decision happened. The audit
 entry is written in the same database transaction as the deletion itself, so the act and its record can't
@@ -375,10 +393,13 @@ assets/            the recorded cast and the hero GIF
 
 ## Synthetic data and interpretation
 
-All data in this repository is synthetic. No real personal data is present, and identity-shaped fields are
-fabricated test artifacts. The regulatory interpretation encoded here is engineering scaffolding for a
-demonstrator and is not legal advice. Sectoral floors and the DPDP Rules move
-independently and should be re-verified against the source statutes on any amendment.
+All data in this repository is synthetic — generated fixtures only, with no real, derived, or
+re-identifiable personal data. Identity-shaped fields are fabricated test artifacts. The encoding here is
+engineering scaffolding for a demonstrator; it is not legal advice and not a compliance system. Sectoral
+floors and the DPDP Rules move independently and should be re-verified against the source statutes on any
+amendment. Where stratified case generation is added, cases will be produced by sampling the design space
+against this deterministic oracle — careful engineering applied to a well-understood idea, not a claim of
+novel technique.
 
 ## License
 
