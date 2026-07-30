@@ -15,3 +15,6 @@ outputs/
 
 # Local blob copies written by seed (canonical paths under fixtures/blobs)
 fixtures/blobs/*.pdf
+
+# Local scratch / notes
+brainstorming/
