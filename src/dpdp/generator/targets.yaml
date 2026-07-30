@@ -1,0 +1,71 @@
+# Committed stratified generator configuration.
+# Labels are correct w.r.t. this repository's encoding only — not legal advice.
+# Boundary strata are relative to pinned as_of (ADR-0002 / design-space).
+
+config_id: stratified-gen-v1
+seed: 20260701
+as_of: "2026-02-15"
+
+# Per-cell targets. Sum is within the 5_000–10_000 pool band.
+cells:
+  # Decisive: elapsed floors, no firing trigger (over-erasure probe shape).
+  elapsed_no_trigger_payment:
+    target: 400
+  elapsed_no_trigger_securities:
+    target: 250
+  elapsed_no_trigger_customer:
+    target: 150
+
+  # ±1-day boundaries (new generation targets).
+  boundary_elapsed_1d_customer:
+    target: 200
+  boundary_unelapsed_1d_customer:
+    target: 200
+  boundary_elapsed_1d_payment_pmla:
+    target: 200
+  # PMLA/SEBI count from raw anchor so ±1d works for any as_of; FY-based floors
+  # (GST/IT/Companies) only expire on calendar-fixed days and need a matching as_of.
+  boundary_unelapsed_1d_payment_pmla:
+    target: 200
+
+  # Arity-4 stacks with varied cited unelapsed subsets.
+  arity4_cite_1_payment:
+    target: 250
+  arity4_cite_2_payment:
+    target: 250
+  arity4_cite_3_payment:
+    target: 250
+  arity4_cite_1_securities:
+    target: 200
+  arity4_cite_2_securities:
+    target: 200
+  arity4_cite_3_securities:
+    target: 200
+
+  # Single uncomputable-anchor cause.
+  uncomputable_customer:
+    target: 250
+  uncomputable_kyc:
+    target: 200
+
+  # Re-engagement overlay (boolean flag; not a 48h clock).
+  re_engagement_erase_payment:
+    target: 250
+
+  # Marketing / ordinary mass.
+  marketing_withdrawn:
+    target: 350
+  marketing_active:
+    target: 250
+  ordinary_erase_payment:
+    target: 500
+  ordinary_erase_securities:
+    target: 300
+  ordinary_open_customer_retain:
+    target: 400
+  ordinary_kyc_open_retain:
+    target: 300
+  ordinary_elapsed_with_purpose_payment:
+    target: 400
+  ordinary_inactivity_erase_payment:
+    target: 300
