@@ -1,14 +1,10 @@
 # Supersede ADR-0002 Scale-Generation Rejection (ADR-0006)
 
-**Parent:** briefs/stratified-case-generation.md  
-**Branch:** `docs/stratified-supersede-adr-0002`  
-**Wave:** B  
-**Executors:** Grok 4.5 (assigned)  
-**Overseer:** Grok 4.5 / Composer 2.5 collective (Kimi K3 unavailable — fallback per human direction)
+**Status:** Completed — retained as a historical planning record. Part of [stratified-case-generation.md](stratified-case-generation.md).
 
 ## Goal
 
-Add **ADR-0006** that supersedes ADR-0002 **in part** — only the rejection of generating fixtures at scale — so the stratified generator (Wave E) is unblocked. Dataset-shape, governance-map, and pinned-`as_of` decisions in ADR-0002 stand unchanged. Edit ADR-0002's status line and update the ADR index in the same PR.
+Add **ADR-0006** that supersedes ADR-0002 **in part** — only the rejection of generating fixtures at scale — so the stratified generator is unblocked. Dataset-shape, governance-map, and pinned-`as_of` decisions in ADR-0002 stand unchanged. Edit ADR-0002's status line and update the ADR index in the same PR.
 
 ## In scope / out of scope
 
@@ -22,12 +18,12 @@ Add **ADR-0006** that supersedes ADR-0002 **in part** — only the rejection of 
 
 **Out of scope**
 
-- Split choice (that is ADR-0007 in Wave D).
+- Split choice (covered separately by ADR-0007).
 - Generator implementation.
 - Changing floors, governance, or resolver semantics.
 - Rewriting ADR-0002's decision body beyond the status line.
 
-## Path decision (Overseer)
+## Path decision
 
 - Parent brief suggested: superseding ADR before generator lands.
 - Existing candidates: `docs/adr/` (precedent).
@@ -49,4 +45,4 @@ Docs-only; no workflow edits.
 
 ## Handoff
 
-Wave E must not merge until this PR is on `main`. Wave D (ADR-0007) is independent of this file set after B merges (B and D both touch `docs/adr/README.md` but are serial relative to the spine — B before E; D after C).
+The generator must not merge until this PR is on `main`, since it builds on the supersession recorded here.

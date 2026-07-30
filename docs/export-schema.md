@@ -19,7 +19,7 @@ Committed export artifacts live under the top-level directory **`export/`**.
 | `export/` | Cross-repo interface. Mirrors the evaluation repository's `export/` convention. Holds frozen slice membership, manifest hash, per-cell actuals-vs-targets, and a config reference. |
 | `outputs/` | **Not used.** Gitignored in this repository; unsuitable for durable, pin-able artifacts. |
 
-Wave G creates the directory and tooling (`src/dpdp/export/`, `scripts/build_export.py`). This document defines the contract those tools must emit. Do not invent a second top-level home for pin-able artifacts.
+The directory and tooling live in `src/dpdp/export/` and `scripts/build_export.py`. This document defines the contract those tools emit. Do not invent a second top-level home for pin-able artifacts.
 
 ---
 
@@ -40,10 +40,10 @@ Every export root object carries:
 | --- | --- | --- |
 | `format_version` | string (semver) | Schema version of this document. Bump on any breaking rename or semantic change to case/`strata` fields. |
 | `as_of` | string (ISO date) | Pinned evaluation date. Required. Boundary strata are undefined without it ([design-space](design-space.md), ADR-0002). |
-| `generator` | object | Identifies committed generator config + seed used to produce the pool. Exact keys finalized when Wave E lands; must be sufficient to regenerate byte-identically. |
+| `generator` | object | Identifies committed generator config + seed used to produce the pool. Keys must be sufficient to regenerate byte-identically (see `export/MANIFEST.json` for the realized shape). |
 | `cases` | array | Oracle-labeled cases (full pool or frozen slice, depending on artifact). |
 
-Companion committed artifacts (Wave G), not necessarily inside each case file:
+Companion committed artifacts, not necessarily inside each case file:
 
 - Manifest hash of the full generated pool.
 - Per-cell actual counts vs configured targets.
@@ -99,7 +99,7 @@ Exact nested shapes of `record` / `oracle` may gain optional fields in a minor v
 
 ## `strata` object (frozen names)
 
-Names below are **locked** for format `1.0.0`. They mirror [design-space.md](design-space.md). Generators and export tooling (Waves E/G) must emit these exact keys.
+Names below are **locked** for format `1.0.0`. They mirror [design-space.md](design-space.md). Generator and export tooling must emit these exact keys.
 
 | Field | Type | Allowed values / meaning |
 | --- | --- | --- |
@@ -130,7 +130,7 @@ Request basis remains on `request.basis`; it is not duplicated inside `strata` s
 
 ## Cross-repo contract freeze
 
-Before Wave E/G implement against these names:
+For any implementation against these names:
 
 1. **This document is the source of truth** for field names and `format_version`.
 2. The evaluation repository re-pins the agent SHA / export tag and consumes `strata` as written — it does not rename fields locally.
@@ -142,7 +142,7 @@ Eval re-runs themselves remain out of scope for this repository.
 
 ## Out of scope here
 
-- Generator implementation (Wave E).
-- Export tooling and committed `export/` payloads (Wave G).
-- Ruleset perturbation mode (Wave H, optional).
+- Generator implementation.
+- Export tooling and committed `export/` payloads.
+- Ruleset perturbation mode (optional).
 - Engine / governance changes.

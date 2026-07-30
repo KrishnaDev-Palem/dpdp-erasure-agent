@@ -1,10 +1,6 @@
 # Frozen Export Tooling
 
-**Parent:** briefs/stratified-case-generation.md  
-**Branch:** `feat/stratified-frozen-export`  
-**Wave:** G  
-**Executors:** Grok 4.5 + Composer 2.5 (collective)  
-**Overseer:** Grok 4.5 / Composer 2.5 collective (Kimi K3 unavailable — fallback per human direction)
+**Status:** Completed — retained as a historical planning record. Part of [stratified-case-generation.md](stratified-case-generation.md).
 
 ## Goal
 
@@ -18,18 +14,18 @@ Build export tooling and commit durable artifacts under top-level `export/`: man
 - Top-level `export/` with committed: manifest hash, per-cell actuals, config reference, frozen slice membership (or uniquely identifying hash)
 - Draw frozen slice from pool by strata coverage (not padding); prefer holdout/`eval` split (ADR-0007) with coverage across cells
 - Tests for slice size band and membership stability given seed
-- Tag on merge commit (orchestrator after green CI)
+- Tag on merge commit, after green CI
 
 **Out of scope**
 
 - Committing the full 5–10k pool
-- Perturbation mode (H)
+- Perturbation mode
 - Eval repo re-run
 - Engine changes
 
-## Path decision (Overseer)
+## Path decision
 
-- Locked: tooling in `src/dpdp/export/`; artifacts in top-level `export/` (justified in Wave D).
+- Locked: tooling in `src/dpdp/export/`; artifacts in top-level `export/` (justified in the export-schema brief).
 
 ## Acceptance
 
@@ -44,4 +40,4 @@ No workflow edits; regeneration uses generator (pure). Prefer verifying committe
 
 ## Handoff
 
-Downstream eval re-pins agent SHA/tag. Wave H optional after G. Wave Z closes parent brief.
+Downstream eval re-pins agent SHA/tag. Ruleset perturbation mode is optional follow-on work after this lands.
