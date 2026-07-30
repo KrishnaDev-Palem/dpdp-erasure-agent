@@ -195,7 +195,7 @@ Both this repository and `dpdp-erasure-eval` are already public. The checks belo
 
 **3. Vocabulary discipline.** Prefer the shared vocabulary above. Model-specific results belong primarily in the evaluation writeup and the revision note; this repository may reference published numbers when explaining why the generator exists.
 
-**4. Licensing.** Confirm the current MIT license file and README statement are accurate. Dual-licensing or rename remains optional and is not required to close this work.
+**4. Licensing.** Confirm the current MIT license file and README statement are accurate.
 
 **5. Where this planning document lives.** It is internal planning. Prefer `briefs/` or a `docs/plan/` subdirectory, labelled as a working plan and marked superseded once `docs/design-space.md`, `docs/export-schema.md`, and the ADRs exist. Those durable documents are what public readers should use.
 
@@ -219,4 +219,3 @@ Both this repository and `dpdp-erasure-eval` are already public. The checks belo
 - [ ] Secrets and PII scan run across all refs; result recorded
 - [ ] This document labelled as a working plan (or superseded by the durable docs above)
 - [ ] Optional: ruleset perturbation mode behind a flag
-- [ ] Optional: relicensing and/or rename — not required to close Part 1
