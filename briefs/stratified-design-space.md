@@ -1,14 +1,10 @@
 # Design Space Specification
 
-**Parent:** briefs/stratified-case-generation.md  
-**Branch:** `docs/stratified-design-space`  
-**Wave:** C  
-**Executors:** Composer 2.5 (assigned)  
-**Overseer:** Grok 4.5 / Composer 2.5 collective (Kimi K3 unavailable — fallback per human direction)
+**Status:** Completed — retained as a historical planning record. Part of [stratified-case-generation.md](stratified-case-generation.md).
 
 ## Goal
 
-Write `docs/design-space.md` — Deliverable 1 — reconciled against the **engine as it exists today**, not an aspirational table. This is the specification the generator (Wave E) is built against. Must state the pinned `as_of` convention (ADR-0002 carries over; ±1-day boundary strata are undefined without it).
+Write `docs/design-space.md` — Deliverable 1 — reconciled against the **engine as it exists today**, not an aspirational table. This is the specification the generator is built against. Must state the pinned `as_of` convention (ADR-0002 carries over; ±1-day boundary strata are undefined without it).
 
 ## In scope / out of scope
 
@@ -22,16 +18,16 @@ Write `docs/design-space.md` — Deliverable 1 — reconciled against the **engi
   - Triggers the engine allows; request basis from `BASIS_VOCABULARY` in `gates.py`; **asymmetry**: `consent_withdrawn` and `inactivity` as request basis do **not** auto-fire on transactions the way `purpose_fulfilled` and `explicit_erasure_right` do (`resolver.py` / planner)
   - Notice / re-engagement: boolean subject-level flag overlay, not a 48-hour clock
 - Reconcile by reading: `src/dpdp/rules/resolver.py`, `src/dpdp/agent/gates.py` (`BASIS_VOCABULARY`), `src/dpdp/rules/floors.yaml`, `src/dpdp/rules/governance.yaml` (or package-data paths as they exist).
-- State that the pinned `as_of` is part of committed generator configuration (Wave E); design-space defines the convention.
+- State that the pinned `as_of` is part of committed generator configuration; design-space defines the convention.
 
 **Out of scope**
 
 - Implementing the generator.
 - Inventing new uncomputable causes or floor arities.
-- Export schema / `strata` field names (Wave D).
+- Export schema / `strata` field names.
 - Engine behaviour changes.
 
-## Path decision (Overseer)
+## Path decision
 
 - Parent brief suggested: `docs/design-space.md`.
 - Existing candidates: `docs/`, `docs/adr/`.
@@ -53,4 +49,4 @@ Docs-only; no workflow edits.
 
 ## Handoff
 
-Wave D waits for this merge — export `strata` fields must mirror these dimensions. Wave E waits for B+C+D.
+The export schema's `strata` fields must mirror these dimensions, and the generator is built against this specification.

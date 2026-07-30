@@ -1,10 +1,6 @@
 # Stratified Case Generator
 
-**Parent:** briefs/stratified-case-generation.md  
-**Branch:** `feat/stratified-generator`  
-**Wave:** E  
-**Executors:** Grok 4.5 + Composer 2.5 (collective)  
-**Overseer:** Grok 4.5 / Composer 2.5 collective (Kimi K3 unavailable — fallback per human direction)
+**Status:** Completed — retained as a historical planning record. Part of [stratified-case-generation.md](stratified-case-generation.md).
 
 ## Goal
 
@@ -24,12 +20,12 @@ Ship a seeded, stratified, oracle-labeled case generator under `src/dpdp/generat
 
 **Out of scope**
 
-- Frozen export tooling / `export/` artifacts (Wave G).
+- Frozen export tooling / `export/` artifacts.
 - Engine / floor / governance semantic changes.
-- Perturbation mode (Wave H).
+- Perturbation mode.
 - Committing the full 5–10k pool.
 
-## Path decision (Overseer)
+## Path decision
 
 - Parent suggested: top-level `generator/`.
 - Decision (locked): `src/dpdp/generator/` + `scripts/generate_cases.py` — needs oracle; matches `rules/` package-data precedent. Target config: `src/dpdp/generator/targets.yaml`.
@@ -45,8 +41,4 @@ Ship a seeded, stratified, oracle-labeled case generator under `src/dpdp/generat
 
 ## CI expectations
 
-No workflow edits expected. If full-pool regen is slow, CI may regenerate a seeded subset and compare a subset hash; full hash verified locally before Wave G tag.
-
-## Handoff
-
-Wave G builds export tooling against this generator and commits manifest hash, per-cell actuals, frozen slice membership under `export/`.
+No workflow edits expected. If full-pool regen is slow, CI may regenerate a seeded subset and compare a subset hash; full hash verified locally before the export tag.

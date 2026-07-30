@@ -1,14 +1,10 @@
 # Export Schema + Split ADR (ADR-0007)
 
-**Parent:** briefs/stratified-case-generation.md  
-**Branch:** `docs/stratified-export-schema`  
-**Wave:** D  
-**Executors:** Grok 4.5 (assigned)  
-**Overseer:** Grok 4.5 / Composer 2.5 collective (Kimi K3 unavailable — fallback per human direction)
+**Status:** Completed — retained as a historical planning record. Part of [stratified-case-generation.md](stratified-case-generation.md).
 
 ## Goal
 
-Freeze the cross-repo export contract: versioned `docs/export-schema.md` with `strata` fields (including `split`), plus **ADR-0007** recording the split choice (SEBI-floor holdout primary; alternatives documented). Justify the new top-level `export/` directory that Wave G will populate. Absorbs former slice F — `split` semantics and schema must freeze together.
+Freeze the cross-repo export contract: versioned `docs/export-schema.md` with `strata` fields (including `split`), plus **ADR-0007** recording the split choice (SEBI-floor holdout primary; alternatives documented). Justify the new top-level `export/` directory that the export tooling will populate. `split` semantics and schema freeze together in this change.
 
 ## In scope / out of scope
 
@@ -23,14 +19,14 @@ Freeze the cross-repo export contract: versioned `docs/export-schema.md` with `s
 
 **Out of scope**
 
-- Implementing export tooling or generator (Waves E/G).
+- Implementing export tooling or generator.
 - Changing engine semantics.
 - Eval-repo re-pin (downstream).
 
-## Path decision (Overseer)
+## Path decision
 
 - Parent suggested: `docs/export-schema.md`; export artifacts later in `export/`.
-- Decision: schema doc in `docs/export-schema.md`; ADR in `docs/adr/0007-*.md`; top-level `export/` justified here, created in Wave G (this wave may add a short `export/README.md` stub only if needed to reserve the path — prefer documenting in export-schema without creating empty dir unless useful).
+- Decision: schema doc in `docs/export-schema.md`; ADR in `docs/adr/0007-*.md`; top-level `export/` justified here, created with the tooling work (a short `export/README.md` stub may be added only if needed to reserve the path — prefer documenting in export-schema without creating an empty dir unless useful).
 
 ## Acceptance
 
@@ -49,4 +45,4 @@ Docs-only; no workflow edits.
 
 ## Handoff
 
-Wave E must use these exact `strata` field names. Wave G implements tooling against this schema version.
+The generator must use these exact `strata` field names, and the export tooling implements against this schema version.

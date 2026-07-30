@@ -3,7 +3,7 @@
 **Status:** Active · **Parent:** [stratified case generation](../briefs/stratified-case-generation.md) (Deliverable 1)  
 **Reconciled against:** engine as of the commit that introduces this document
 
-This document is the specification the stratified case generator (Wave E) is built against. Every dimension below is taken from live engine behaviour — resolver, governance config, gates, and planner — not from an aspirational table. If the generator and this document disagree after reconciliation, one of the two is a bug.
+This document is the specification the stratified case generator is built against. Every dimension below is taken from live engine behaviour — resolver, governance config, gates, and planner — not from an aspirational table. If the generator and this document disagree after reconciliation, one of the two is a bug.
 
 **Public framing.** Labels produced against this design space are correct with respect to **this repository's encoding** of retention rules. That is not a claim about correctness under the DPDP Act or any sectoral statute, and this document is not legal advice.
 
@@ -20,7 +20,7 @@ An explicit evaluation date (`as_of`) is threaded through resolution, planning, 
 Convention (carried over from [ADR-0002](adr/0002-synthetic-dataset-shape.md)):
 
 - Fixtures and generated cases are authored **relative to a committed `as_of`**, not to the calendar date of the run.
-- The pinned value will live in committed generator configuration (Wave E); this document defines the convention only.
+- The pinned value lives in committed generator configuration; this document defines the convention only.
 
 The manifest and certificate both carry the `as_of` used for adjudication.
 
@@ -196,8 +196,8 @@ Generation strata: `re_engagement` ∈ {`true`, `false`} as a subject overlay fl
 - Applicable floor arities 2 or 3 (governance change required).
 - Additional `uncomputable_anchor` causes (engine change required).
 - Real notice-period / 48-hour clock (engine change required).
-- Export `strata` field names and schema (Wave D — `docs/export-schema.md`).
-- Generator implementation (Wave E).
+- Export `strata` field names and schema — see `docs/export-schema.md`.
+- Generator implementation.
 
 ---
 

@@ -1,10 +1,6 @@
 # Stratified Public Framing + History Scan
 
-**Parent:** briefs/stratified-case-generation.md  
-**Branch:** `docs/stratified-public-framing`  
-**Wave:** A  
-**Executors:** Composer 2.5 (assigned)  
-**Overseer:** Grok 4.5 / Composer 2.5 collective (Kimi K3 unavailable — fallback per human direction)
+**Status:** Completed — retained as a historical planning record. Part of [stratified-case-generation.md](stratified-case-generation.md).
 
 ## Goal
 
@@ -25,11 +21,11 @@ Apply parent brief §9 / §9.1 / §10 public-facing language and hygiene: README
 - Remediating findings from the scan (escalate to human as separate work if anything is found).
 - Generator, export schema, ADRs.
 
-## Path decision (Overseer)
+## Path decision
 
 - Parent brief suggested: README, `.github/ISSUE_TEMPLATE/`, scan result recorded.
 - Existing candidates: README exists; no issue templates yet; `docs/` for durable scan record.
-- Decision: `docs/history-scan.md` for the scan record (locked by execution plan §11.3); create `.github/ISSUE_TEMPLATE/` with at least one template carrying the two scope-of-support sentences.
+- Decision: `docs/history-scan.md` for the scan record; create `.github/ISSUE_TEMPLATE/` with at least one template carrying the two scope-of-support sentences.
 
 ## Acceptance
 
@@ -45,6 +41,4 @@ Closes parent DoD: README framing; scope-of-support; secrets/PII scan recorded.
 
 Docs and `.github` templates only — existing `tests` workflow must stay green with no workflow edits.
 
-## Handoff
-
-Wave A does not gate B/C/D/E. After merge, mark manifest Wave A complete. If the scan finds secrets/PII, open a human-facing note; do not expand this PR into remediation.
+If the scan finds secrets/PII, open a human-facing note; do not expand the PR into remediation.

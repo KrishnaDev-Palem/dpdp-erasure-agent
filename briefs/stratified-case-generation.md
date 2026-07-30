@@ -219,4 +219,4 @@ Both this repository and `dpdp-erasure-eval` are already public. The checks belo
 - [x] Scope-of-support statement in the README, and in an issue template
 - [x] Secrets and PII scan run across all refs; result recorded
 - [x] This document labelled as a working plan (or superseded by the durable docs above)
-- [ ] Optional: ruleset perturbation mode behind a flag — **deferred** (Wave H not required for downstream re-pin)
+- [ ] Optional: ruleset perturbation mode behind a flag — **deferred** (not required for downstream re-pin)
