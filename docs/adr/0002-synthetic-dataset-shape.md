@@ -1,6 +1,6 @@
 # ADR-0002: Synthetic Dataset Shape
 
-**Status:** Accepted · **Date:** 2026-06-21
+**Status:** Accepted · Superseded in part by ADR-0006 (fixture generation at scale) · **Date:** 2026-06-21
 
 ## Context
 
