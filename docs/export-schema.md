@@ -2,7 +2,7 @@
 
 **Status:** Active · **Format version:** `1.0.0`  
 **Parent:** [stratified case generation](../briefs/stratified-case-generation.md) (Deliverables 3–4)  
-**Design space:** [design-space.md](design-space.md) · **Split ADR:** [ADR-0007](adr/0007-eval-split-sebi-holdout.md)
+**Design space:** [design-space.md](design-space.md) · **Split ADR:** [ADR-0007](adr/0007-eval-split-sebi-holdout.md) · **Published slice:** [ADR-0008](adr/0008-published-coverage-slice.md)
 
 This document freezes the **cross-repo export contract** between this agent repository (oracle + generator) and `dpdp-erasure-eval` (scoring). Field names and the format version are fixed here. Downstream must re-pin against a tagged export rather than rename fields mid-flight. A schema change requires bumping the format version.
 
@@ -47,7 +47,18 @@ Companion committed artifacts, not necessarily inside each case file:
 
 - Manifest hash of the full generated pool.
 - Per-cell actual counts vs configured targets.
-- Frozen eval-slice membership (or a hash that uniquely identifies it).
+- Frozen-slice membership (or a hash that uniquely identifies it). Published membership is a coverage sample across every generator cell ([ADR-0008](adr/0008-published-coverage-slice.md)). The SEBI holdout remains the `split` field on each case ([ADR-0007](adr/0007-eval-split-sebi-holdout.md)) and is not the published-slice filter.
+
+`export/MANIFEST.json` describes that membership as:
+
+```json
+"frozen_slice": {
+  "size": 350,
+  "selection": "coverage",
+  "membership_hash": "<sha256 of sorted case_ids>",
+  "membership_path": "export/frozen_slice_ids.json"
+}
+```
 
 ---
 

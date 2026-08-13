@@ -1,8 +1,8 @@
 # Stratified Case Generation
 
 **Status:** Working plan — **superseded** for durable specs by [`docs/design-space.md`](../docs/design-space.md), [`docs/export-schema.md`](../docs/export-schema.md), [ADR-0006](../docs/adr/0006-stratified-oracle-generation.md), and [ADR-0007](../docs/adr/0007-eval-split-sebi-holdout.md). Keep this file as the historical upstream plan and DoD checklist.
-**Scope:** the upstream half of Part 1. Nothing precedes it except a superseding ADR for ADR-0002 (which rejected scale generation).
-**Consumed by:** the evaluation repository immediately (revision re-run). A later training project may reuse the same generator; that reuse is out of scope here.
+**Scope:** generator, export schema, and frozen slice in this repository. Nothing precedes it except a superseding ADR for ADR-0002 (which rejected scale generation).
+**Consumed by:** the evaluation repository. A later training project may reuse the same generator; that reuse is out of scope here.
 
 
 ---
@@ -11,7 +11,7 @@
 
 The evaluation harness currently grades models against a hand-built fixture set of 34 location pairs. That sample is too small to support the error rates published against it. This document covers the upstream fix: replacing hand-built fixtures with a **stratified case generator** whose labels are produced by the rule engine (the deterministic **oracle**). The generator itself is a deliverable; it does not exist yet.
 
-The downstream half — re-running T1/T2/T3/autonomous, re-reporting with per-stratum breakdowns, and amending the published findings as a revision — is planned in `brainstorming/part-1-scaling-the-eval-dataset.md` and executed in the evaluation repository. The two halves are separable and should be reviewed separately.
+The downstream half — re-running T1/T2/T3/autonomous, re-reporting with per-stratum breakdowns, and amending the published findings — is executed in the evaluation repository. The two halves are separable and should be reviewed separately.
 
 ### Non-goals
 

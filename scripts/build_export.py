@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build committed export/ artifacts (manifest hash + frozen eval slice)."""
+"""Build committed export/ artifacts (manifest hash + coverage slice)."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ def main() -> int:
         "--slice-size",
         type=int,
         default=DEFAULT_SLICE_SIZE,
-        help="Frozen eval slice size (300–400)",
+        help="Published coverage slice size (300–400)",
     )
     args = parser.parse_args()
 

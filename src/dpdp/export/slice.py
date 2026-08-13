@@ -1,4 +1,4 @@
-"""Select a stratum-covered frozen eval slice from the generated pool."""
+"""Select a stratum-covered frozen slice from the generated pool."""
 
 from __future__ import annotations
 
@@ -18,21 +18,29 @@ def select_frozen_slice(
     *,
     target_size: int = 350,
     seed: int,
-    split: str = "eval",
+    split: str | None = None,
 ) -> tuple[list[str], str]:
     """Return (case_ids, membership_hash) for a stratified frozen slice.
 
-    Draws only from ``strata.split == split`` (ADR-0007 holdout by default).
+    When ``split`` is None (default), draw from **every** cell — the published
+    coverage slice (ADR-0008). When ``split`` is set, draw only from
+    ``strata.split == split`` (ADR-0007 holdout, e.g. ``eval``).
+
     Round-robins across ``cell_id`` for coverage, then fills to ``target_size``.
     Sized by coverage (default 350 ∈ ~300–400), not padded arbitrarily beyond that.
     """
     if not 300 <= target_size <= 400:
         raise ValueError(f"frozen slice target_size must be in 300–400, got {target_size}")
 
-    pool = [c for c in cases if c["strata"]["split"] == split]
+    if split is None:
+        pool = list(cases)
+        pool_label = "coverage"
+    else:
+        pool = [c for c in cases if c["strata"]["split"] == split]
+        pool_label = split
     if len(pool) < target_size:
         raise ValueError(
-            f"not enough {split!r} cases ({len(pool)}) to build slice of {target_size}"
+            f"not enough {pool_label!r} cases ({len(pool)}) to build slice of {target_size}"
         )
 
     by_cell: dict[str, list[dict[str, Any]]] = {}
@@ -45,7 +53,7 @@ def select_frozen_slice(
 
     selected: list[str] = []
     seen: set[str] = set()
-    # Ensure at least one from every eval cell when possible.
+    # Ensure at least one from every eligible cell when possible.
     for cell_id in sorted(by_cell):
         case = by_cell[cell_id][0]
         if case["case_id"] not in seen:
