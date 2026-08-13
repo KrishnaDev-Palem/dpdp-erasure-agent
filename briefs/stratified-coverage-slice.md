@@ -8,7 +8,7 @@
 
 ## Goal
 
-Stop treating the SEBI holdout as the published frozen slice. Commit a ~350-id **coverage** membership list drawn from **every generator cell**, and record that `strata.split` (ADR-0007) remains the Part 2 train/holdout field — it is not how published rates are sampled.
+Stop treating the SEBI holdout as the published frozen slice. Commit a ~350-id **coverage** membership list drawn from **every generator cell**, and record that `strata.split` (ADR-0007) remains the train/holdout field for any later training set — it is not how the published slice is sampled.
 
 ## In scope / out of scope
 

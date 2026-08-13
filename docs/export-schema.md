@@ -47,7 +47,7 @@ Companion committed artifacts, not necessarily inside each case file:
 
 - Manifest hash of the full generated pool.
 - Per-cell actual counts vs configured targets.
-- Frozen **coverage-slice** membership (or a hash that uniquely identifies it). This list is sampled across every generator cell ([ADR-0008](adr/0008-published-coverage-slice.md)). It is **not** filtered to `strata.split == eval`. The SEBI holdout remains the `split` field on each case ([ADR-0007](adr/0007-eval-split-sebi-holdout.md)).
+- Frozen-slice membership (or a hash that uniquely identifies it). Published membership is a coverage sample across every generator cell ([ADR-0008](adr/0008-published-coverage-slice.md)). The SEBI holdout remains the `split` field on each case ([ADR-0007](adr/0007-eval-split-sebi-holdout.md)) and is not the published-slice filter.
 
 `export/MANIFEST.json` describes that membership as:
 

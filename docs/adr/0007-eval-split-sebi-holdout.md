@@ -1,7 +1,7 @@
 # ADR-0007: Eval Split by SEBI Floor Holdout
 
-**Status:** Accepted · Amended by [ADR-0008](0008-published-coverage-slice.md) (published frozen slice is coverage across cells, not holdout-only) · **Date:** 2026-07-29  
-**Related:** [ADR-0006](0006-stratified-oracle-generation.md) (scale generation) · [ADR-0008](0008-published-coverage-slice.md) (published membership) · [export-schema.md](../export-schema.md) (`strata.split`)
+**Status:** Accepted · Amended in part by [ADR-0008](0008-published-coverage-slice.md) (published frozen-slice membership) · **Date:** 2026-07-29  
+**Related:** [ADR-0006](0006-stratified-oracle-generation.md) (scale generation) · [ADR-0008](0008-published-coverage-slice.md) · [export-schema.md](../export-schema.md) (`strata.split`)
 
 ## Context
 
@@ -17,7 +17,6 @@ Parent plan (`briefs/stratified-case-generation.md`) recommends holding out one 
 
 - Cases whose applicable `floor_set` **includes** `sebi` (securities transactions under current governance) are assigned to the **eval** side of the split (holdout).
 - All other cases are assigned to the **train** (or non-holdout) side, from which ordinary training or analysis sets may be drawn.
-- **Amendment (ADR-0008):** the published frozen slice used for public rates is **not** taken from the holdout side. It is a coverage sample across all generator cells. `strata.split` remains the train/holdout field only.
 
 Semantics of the string values on `strata.split` for format `1.0.0`:
 
@@ -35,6 +34,7 @@ The split is a pure function of governance-applicable floors for the case's cate
 - Downstream must read `strata.split` as emitted; it must not re-derive holdout membership from `case_id`.
 - Changing the holdout floor later is a new ADR + export `format_version` bump, because every pinned export's split labels would change meaning.
 - Payment vs securities discrimination remains measurable on the train side via other strata (`floor_set`, `collision_arity`, triggers); the holdout specifically stress-tests generalisation to the SEBI-bearing stack.
+- Which cases enter the committed frozen slice used for published rates is no longer this record's decision; see ADR-0008.
 
 ## Alternatives considered
 
