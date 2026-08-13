@@ -2,10 +2,10 @@
   "as_of": "2026-02-15",
   "format_version": "1.0.0",
   "frozen_slice": {
-    "membership_hash": "3f56bb0942230094142a4956c62b37dd58acb30f1faab8832499053febfd5a9c",
+    "membership_hash": "b93646fb429571eb690060285c1fca32ad015388ee7c14eb99d30f855924e464",
     "membership_path": "export/frozen_slice_ids.json",
-    "size": 350,
-    "split": "eval"
+    "selection": "coverage",
+    "size": 350
   },
   "generator": {
     "config_id": "stratified-gen-v1",

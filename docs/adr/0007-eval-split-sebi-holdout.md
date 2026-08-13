@@ -1,7 +1,7 @@
 # ADR-0007: Eval Split by SEBI Floor Holdout
 
-**Status:** Accepted · **Date:** 2026-07-29  
-**Related:** [ADR-0006](0006-stratified-oracle-generation.md) (scale generation) · [export-schema.md](../export-schema.md) (`strata.split`)
+**Status:** Accepted · Amended by [ADR-0008](0008-published-coverage-slice.md) (published frozen slice is coverage across cells, not holdout-only) · **Date:** 2026-07-29  
+**Related:** [ADR-0006](0006-stratified-oracle-generation.md) (scale generation) · [ADR-0008](0008-published-coverage-slice.md) (published membership) · [export-schema.md](../export-schema.md) (`strata.split`)
 
 ## Context
 
@@ -16,7 +16,8 @@ Parent plan (`briefs/stratified-case-generation.md`) recommends holding out one 
 **Primary split: hold out the SEBI sectoral floor.**
 
 - Cases whose applicable `floor_set` **includes** `sebi` (securities transactions under current governance) are assigned to the **eval** side of the split (holdout).
-- All other cases are assigned to the **train** (or non-holdout) side, from which ordinary training or analysis sets may be drawn; the frozen eval slice for published rates is taken from the holdout side with stratum coverage constraints (~300–400 pairs), not by padding.
+- All other cases are assigned to the **train** (or non-holdout) side, from which ordinary training or analysis sets may be drawn.
+- **Amendment (ADR-0008):** the published frozen slice used for public rates is **not** taken from the holdout side. It is a coverage sample across all generator cells. `strata.split` remains the train/holdout field only.
 
 Semantics of the string values on `strata.split` for format `1.0.0`:
 

@@ -48,7 +48,7 @@ def build_export_artifacts(
         },
         "frozen_slice": {
             "size": len(slice_ids),
-            "split": "eval",
+            "selection": "coverage",
             "membership_hash": slice_hash,
             "membership_path": "export/frozen_slice_ids.json",
         },
@@ -78,7 +78,7 @@ Cross-repo interface for `dpdp-erasure-eval` (see `MANIFEST.json` for format ver
 | File | Contents |
 | --- | --- |
 | `MANIFEST.json` | Format version, pinned `as_of`, generator config ref, pool hash, actuals |
-| `frozen_slice_ids.json` | Membership list (~300–400 ids) and membership hash |
+| `frozen_slice_ids.json` | Coverage-slice membership (~300–400 ids) and membership hash |
 
 The full 5–10k pool is **not** committed; regenerate with `scripts/generate_cases.py`
 or `scripts/build_export.py`. Labels are correct w.r.t. this repository's encoding
